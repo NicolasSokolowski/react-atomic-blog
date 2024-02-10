@@ -1,5 +1,5 @@
 import { faker } from "@faker-js/faker";
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useMemo, useState } from "react";
 
 function createRandomPost() {
   return {
@@ -34,14 +34,18 @@ function PostProvider({ children }) {
     setPosts([]);
   }
 
-  return (
-    <PostContext.Provider value={{
+  const value = useMemo(() => {
+    return {
       posts: searchedPosts,
       onAddPosts: handleAddPost,
       onClearPosts: handleClearPosts,
       searchQuery,
-      setSearchQuery,
-    }}>
+      setSearchQuery
+    };
+  }, [searchQuery, searchedPosts])
+
+  return (
+    <PostContext.Provider value={value}>
       {children}
     </PostContext.Provider>
   )
